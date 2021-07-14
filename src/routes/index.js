@@ -8,7 +8,7 @@ const connection = mysql.createConnection({
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_SCHEMA,
-    port: '3306'
+    port: 3306
 });
 
 connection.connect((err) =>{
@@ -19,9 +19,44 @@ connection.connect((err) =>{
     }
 });
 
+//Set connection every 5 second's
+setInterval(()=>{
+    connection.query('SELECT 1');
+}, 5000);
+
+//* Route to get All forms
 router.get('/', (req, res) => {
-    res.json('Hello world')
+    connection.query(`SELECT * FROM form`, (err, rows) => {
+        if(!err){
+            res.json(rows)
+        }else{
+            throw err;
+        }
+    })
 })
 
+//* Route to post new Form
+router.post('/new', (req, res) => {
+    const {ID, concept, amount,  isType, category} = req.body
+    connection.query(`INSERT INTO form VALUES(?, ?, ?, ?, ?, ?)`,
+     [ID, concept, amount, new Date(), isType, category], 
+        (err, rows) => {
+            if(err){
+                throw err;
+            } else{
+                console.log(rows);
+                res.json(rows)
+            }
+            
+        });
+});
+
+//* Route to delete an existing Form
+router.delete('/:id', (req, res) => {
+    const {ID} = req.body
+    connection.query(`DELETE FROM from WHERE ID = ?`, ID, (err, rows) => {
+        err ? console.log('Successuly deleted') : console.log(err);
+    })
+})
 
 module.exports = router;
