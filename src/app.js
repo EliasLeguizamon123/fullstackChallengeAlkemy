@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
+const cors = require('cors');
 
 require('dotenv').config({ path: './.env' })
 
@@ -9,7 +10,7 @@ const app = express();
 //Settings
 app.set('port', process.env.PORT);
 app.set('views', path.resolve(__dirname, 'views'));
-//require('./database/database.js')
+app.use(cors());
 
 //Middlewares
 app.use(morgan('dev'));

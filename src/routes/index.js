@@ -44,7 +44,7 @@ router.post('/new', (req, res) => {
             if(err){
                 throw err;
             } else{
-                console.log(rows);
+                console.log('New form creating succesfuly');
                 res.json(rows)
             }
             
@@ -54,8 +54,8 @@ router.post('/new', (req, res) => {
 //* Route to delete an existing Form
 router.delete('/:id', (req, res) => {
     const {ID} = req.body
-    connection.query(`DELETE FROM from WHERE ID = ?`, ID, (err, rows) => {
-        err ? console.log('Successuly deleted') : console.log(err);
+    connection.query(`DELETE FROM form WHERE ID = ?`, ID, (err, rows) => {
+        err ? res.json(rows) : console.log(err);
     })
 })
 
